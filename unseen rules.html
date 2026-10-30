@@ -1,0 +1,883 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>The Unseen Rules</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout concept: a printed research bulletin. One narrow reading column for the
+   questionnaire, a wider ruled column for the dashboard and report, running heads
+   in small caps, double rules, and footnote-style method notes. */
+:root{
+  --display:'Cormorant Garamond',Georgia,'Times New Roman',serif;
+  --body:'Source Serif 4',Georgia,'Times New Roman',serif;
+  --ui:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --paper:#F6EFE6; --paper-2:#EEE3D6; --card:#FBF7F0;
+  --ink:#2A2527; --ink-2:#5B5256; --ink-3:#6B6165;
+  --accent:#6E1F36; --accent-2:#4F1428; --on-accent:#FBF3EC;
+  --rose:#D9A7AE; --rose-soft:#EBD6D4; --rule:#D6C7BA;
+  --s0:#EBD5D4; --s1:#D8A6AD; --s2:#A9546A; --s3:#6E1F36;
+  --t0:#2A2527; --t1:#2A2527; --t2:#FBF3EC; --t3:#FBF3EC;
+  --demo:#6B4A00; --demo-bg:#F3E4BE; --ok:#2F5A3E; --ok-bg:#DCE8DC;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#1B1617; --paper-2:#231C1E; --card:#272022;
+    --ink:#F2E9E4; --ink-2:#CFC2BD; --ink-3:#B3A5A1;
+    --accent:#E7A0B1; --accent-2:#F3C0CC; --on-accent:#2B1019;
+    --rose:#7C4553; --rose-soft:#3A272C; --rule:#43363A;
+    --s0:#47323A; --s1:#7C4A58; --s2:#BE6F85; --s3:#F2A8BA;
+    --t0:#F2E9E4; --t1:#F2E9E4; --t2:#1B1617; --t3:#1B1617;
+    --demo:#E8C46A; --demo-bg:#3A3018; --ok:#9CCBA8; --ok-bg:#1F3326;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#1B1617; --paper-2:#231C1E; --card:#272022;
+  --ink:#F2E9E4; --ink-2:#CFC2BD; --ink-3:#B3A5A1;
+  --accent:#E7A0B1; --accent-2:#F3C0CC; --on-accent:#2B1019;
+  --rose:#7C4553; --rose-soft:#3A272C; --rule:#43363A;
+  --s0:#47323A; --s1:#7C4A58; --s2:#BE6F85; --s3:#F2A8BA;
+  --t0:#F2E9E4; --t1:#F2E9E4; --t2:#1B1617; --t3:#1B1617;
+  --demo:#E8C46A; --demo-bg:#3A3018; --ok:#9CCBA8; --ok-bg:#1F3326;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 1.0625rem/1.62 var(--body);
+  padding-block:0 3.5rem;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--paper)}
+a{color:var(--accent)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.08;margin:0;text-wrap:balance}
+p{margin:0}
+.wrap{max-width:44rem;margin-inline:auto}
+.wrap.wide{max-width:70rem}
+.eyebrow{font:600 .72rem/1.3 var(--ui);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2)}
+.muted{color:var(--ink-2)}
+.small{font-size:.9rem}
+
+/* masthead */
+.mast{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--paper);
+  box-shadow:0 0 0 100vmax var(--paper);clip-path:inset(0 -100vmax);
+  border-bottom:3px double var(--ink);padding-block:.7rem .55rem}
+.mast .row1{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;flex-wrap:wrap}
+.brand{font-family:var(--display);font-weight:700;font-size:1.45rem;letter-spacing:.01em;color:var(--ink);text-decoration:none}
+.brand i{color:var(--accent)}
+.vol{font:500 .68rem var(--ui);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2)}
+.nav{display:flex;gap:1.2rem;overflow-x:auto;white-space:nowrap;margin-top:.45rem;padding-bottom:.15rem;scrollbar-width:thin}
+.nav a{font:500 .8rem var(--ui);letter-spacing:.04em;color:var(--ink-2);text-decoration:none;padding:.25rem 0;border-bottom:2px solid transparent}
+.nav a[aria-current="page"]{color:var(--accent);border-bottom-color:var(--accent)}
+
+/* progress */
+.progress{margin-block:1.4rem 0}
+.progress ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem}
+.progress a{display:block;text-decoration:none;color:var(--ink-2);font:500 .72rem/1.3 var(--ui);letter-spacing:.03em}
+.progress .bar2{height:4px;background:var(--rule);margin-top:.35rem}
+.progress .bar2 i{display:block;height:100%;background:var(--accent);width:0}
+.progress li.done a{color:var(--accent)}
+.progress b{display:block;font-weight:600;color:var(--ink)}
+
+/* views */
+.view{padding-block:2rem 1rem}
+@media (prefers-reduced-motion:no-preference){.view{animation:fade .35s ease both}@keyframes fade{from{opacity:.001;transform:translateY(6px)}to{opacity:1;transform:none}}}
+
+/* home */
+.hero h1{font-size:clamp(2.5rem,9.4vw,5rem);margin-top:1rem;letter-spacing:-.01em}
+.hero h1 em{color:var(--accent);font-weight:500}
+.lede{font-size:1.2rem;color:var(--ink-2);margin-top:1.4rem;max-width:36rem}
+.btn{display:inline-block;background:var(--accent);color:var(--on-accent);border:0;border-radius:2px;padding:.95rem 1.6rem;
+  font:600 .82rem var(--ui);letter-spacing:.14em;text-transform:uppercase;text-decoration:none;cursor:pointer}
+.btn:hover{background:var(--accent-2)}
+.btn.ghost{background:transparent;color:var(--accent);border:1.5px solid var(--accent)}
+.btn.ghost:hover{background:var(--rose-soft)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.link{background:none;border:0;color:var(--accent);font:500 .85rem var(--ui);cursor:pointer;padding:.4rem 0;text-decoration:underline;text-underline-offset:3px}
+.link:disabled{color:var(--ink-3);text-decoration:none;cursor:default}
+.facts{display:flex;flex-wrap:wrap;gap:.4rem 2rem;margin-top:2.2rem;padding-block:1rem;border-block:1px solid var(--rule)}
+.facts div{font:500 .82rem var(--ui);color:var(--ink-2)}
+.facts b{display:block;font:600 1.5rem var(--display);color:var(--ink)}
+.phrases{margin-top:2.6rem}
+.phrases blockquote{margin:.9rem 0 0;padding-left:1rem;border-left:3px solid var(--rose);font:italic 500 1.35rem/1.35 var(--display)}
+.phrases ul{list-style:none;padding:0;margin:.8rem 0 0;display:grid;gap:.5rem}
+.phrases li{font:italic 500 1.3rem/1.3 var(--display);color:var(--ink)}
+.phrases li::before{content:"“";color:var(--accent)}
+.phrases li::after{content:"”";color:var(--accent)}
+.parts{margin-top:2.6rem;display:grid;gap:1.1rem}
+.parts div{display:grid;grid-template-columns:2.2rem 1fr;gap:.2rem .7rem}
+.parts span{font:600 1.7rem var(--display);color:var(--accent);grid-row:span 2;line-height:1}
+.parts h3{font-size:1.35rem}
+.notice{margin-top:2.4rem;padding:1rem 1.1rem;background:var(--paper-2);border-left:3px solid var(--accent);font-size:.95rem}
+.notice b{font-family:var(--ui);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase}
+
+.why{margin-top:3rem;padding-top:1.4rem;border-top:3px double var(--ink)}
+.why h2{font-size:clamp(1.8rem,5vw,2.5rem);margin-top:.6rem}
+.why p{margin-top:.9rem}
+.why ul{margin:.7rem 0 0;padding-left:1.2rem}
+.why li{margin-top:.4rem}
+
+/* participation */
+.qhead{display:flex;justify-content:space-between;gap:1rem;align-items:center;margin-bottom:.8rem}
+.mini{height:3px;background:var(--rule);flex:1;max-width:10rem}
+.mini i{display:block;height:100%;background:var(--accent)}
+.statement{font-size:clamp(1.7rem,5.8vw,2.5rem);line-height:1.15;margin-top:.6rem}
+.prompt{margin-top:1rem;color:var(--ink-2);font-style:italic}
+.opts{display:grid;gap:.55rem;margin-top:1.4rem}
+.opt{display:flex;gap:.8rem;align-items:center;text-align:left;width:100%;background:var(--card);border:1px solid var(--rule);border-radius:2px;
+  padding:.85rem 1rem;font:400 1rem/1.4 var(--body);color:var(--ink);cursor:pointer}
+.opt:hover{border-color:var(--accent)}
+.opt .dot{flex:none;width:1.1rem;height:1.1rem;border:1.5px solid var(--ink-3);border-radius:50%}
+.opt[aria-checked="true"]{border-color:var(--accent);background:var(--rose-soft)}
+.opt[aria-checked="true"] .dot{border-color:var(--accent);background:radial-gradient(var(--accent) 0 45%,transparent 50%)}
+.opt.skip{border-style:dashed;color:var(--ink-2);font-size:.92rem}
+.opt:disabled{cursor:default;opacity:.9}
+.navrow{display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-top:1.4rem}
+.card{background:var(--card);border:1px solid var(--rule);padding:1.3rem 1.2rem;margin-top:1.4rem}
+.situation{font:italic 500 1.35rem/1.4 var(--display);margin-top:1rem;padding:1rem 0 1rem 1.1rem;border-left:3px solid var(--accent)}
+.step-q{font:600 .78rem var(--ui);letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-top:1.8rem}
+.step-t{font-size:1.2rem;margin-top:.3rem}
+.reflect{margin-top:1.4rem;background:var(--paper-2);padding:1rem 1.1rem;border-left:3px solid var(--accent);font-size:.98rem}
+.reflect b{font:600 .72rem var(--ui);letter-spacing:.12em;text-transform:uppercase;display:block;margin-bottom:.3rem}
+.opt.ref{border-color:var(--accent)}
+.tag{margin-left:auto;font:600 .62rem var(--ui);letter-spacing:.1em;text-transform:uppercase;color:var(--accent);white-space:nowrap}
+textarea{width:100%;min-height:9rem;background:var(--card);color:var(--ink);border:1px solid var(--ink-3);border-radius:2px;padding:.9rem 1rem;font:400 1.05rem/1.5 var(--body);resize:vertical}
+.count{font:500 .78rem var(--ui);color:var(--ink-2);text-align:right;margin-top:.3rem}
+.chips{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.8rem}
+.chip{border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:2px;padding:.45rem .8rem;font:500 .8rem var(--ui);cursor:pointer}
+.chip[aria-checked="true"],.chip[aria-pressed="true"]{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.err{color:#9A1B1B;font:500 .9rem var(--ui);margin-top:.7rem}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .err{color:#FF9C9C}}
+:root[data-theme="dark"] .err{color:#FF9C9C}
+.sync{font:500 .82rem var(--ui);color:var(--ink-2);margin-top:1rem}
+.mine{font:italic 500 1.4rem/1.35 var(--display);padding:1rem 0 1rem 1.1rem;border-left:3px solid var(--accent);margin-top:1.2rem;overflow-wrap:anywhere}
+
+/* dashboard */
+.dh{display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:end}
+.dh h1,.rh h1{font-size:clamp(2.2rem,7vw,3.6rem)}
+.seg-ctl{display:inline-flex;border:1.5px solid var(--accent);border-radius:2px;overflow:hidden}
+.seg-ctl button{background:transparent;color:var(--accent);border:0;padding:.55rem .9rem;font:600 .74rem var(--ui);letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
+.seg-ctl button[aria-pressed="true"]{background:var(--accent);color:var(--on-accent)}
+.banner{margin-top:1.2rem;padding:.8rem 1rem;font:500 .9rem/1.45 var(--ui);border-left:4px solid}
+.banner.demo{background:var(--demo-bg);color:var(--demo);border-color:var(--demo);background-image:repeating-linear-gradient(135deg,transparent 0 10px,rgba(0,0,0,.05) 10px 20px)}
+.banner.real{background:var(--ok-bg);color:var(--ok);border-color:var(--ok)}
+.banner.info{background:var(--paper-2);color:var(--ink);border-color:var(--accent)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(10.5rem,1fr));gap:0;margin:1.6rem 0 0;border-block:1px solid var(--ink)}
+.stats div{padding:.9rem 1rem .9rem 0}
+.stats dt{font:600 .68rem var(--ui);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2)}
+.stats dd{margin:.2rem 0 0;font:600 2rem/1.1 var(--display);font-variant-numeric:tabular-nums}
+.stats dd.sm{font-size:1.1rem;font-family:var(--body);font-weight:400}
+.dsec{margin-top:3rem}
+.dsec>h2{font-size:clamp(1.7rem,4.5vw,2.3rem);padding-bottom:.5rem;border-bottom:1px solid var(--ink)}
+.dsec>p.lead{margin-top:.8rem;color:var(--ink-2);max-width:42rem}
+.finds{margin:1rem 0 0;padding:0;list-style:none;display:grid;gap:.7rem}
+.finds li{padding-left:1.1rem;position:relative}
+.finds li::before{content:"";position:absolute;left:0;top:.7em;width:.45rem;height:.45rem;background:var(--accent)}
+.fig{position:relative;margin-top:1.2rem}
+.is-demo .fig::after{content:"DEMONSTRATION DATA";position:absolute;inset:0;display:grid;place-items:center;font:700 clamp(1.4rem,6vw,2.6rem) var(--ui);letter-spacing:.1em;color:var(--demo);opacity:.13;transform:rotate(-12deg);pointer-events:none;text-align:center}
+.is-demo .fig{outline:1.5px dashed var(--demo);outline-offset:6px}
+.legend{display:flex;flex-wrap:wrap;gap:.4rem 1.1rem;font:500 .78rem var(--ui);color:var(--ink-2);margin-top:1rem}
+.legend span::before{content:"";display:inline-block;width:.8rem;height:.8rem;margin-right:.4rem;vertical-align:-1px}
+.legend .l0::before{background:var(--s0)}.legend .l1::before{background:var(--s1)}.legend .l2::before{background:var(--s2)}.legend .l3::before{background:var(--s3)}
+.item{padding-block:1rem;border-bottom:1px solid var(--rule)}
+.item .stmt{font-size:1.05rem;line-height:1.4}
+.item .meta{font:500 .74rem var(--ui);color:var(--ink-2);margin:.2rem 0 .55rem;letter-spacing:.02em}
+.bar{display:flex;gap:2px;height:1.9rem}
+.bar .seg{display:flex;align-items:center;justify-content:center;font:600 .74rem var(--ui);min-width:0;overflow:hidden;font-variant-numeric:tabular-nums}
+.bar .seg.s0{background:var(--s0);color:var(--t0)}.bar .seg.s1{background:var(--s1);color:var(--t1)}
+.bar .seg.s2{background:var(--s2);color:var(--t2)}.bar .seg.s3{background:var(--s3);color:var(--t3)}
+.bar .none{font:500 .82rem var(--ui);color:var(--ink-3);align-self:center}
+.hbar{display:grid;grid-template-columns:1fr;gap:.2rem;margin-top:.8rem}
+.hbar .lab{font-size:.95rem;line-height:1.35}
+.hbar .trk{display:flex;align-items:center;gap:.6rem}
+.hbar .trk i{display:block;height:.9rem;background:var(--s2);min-width:2px}
+.hbar .trk i.r{background:var(--s3)}
+.hbar .trk span{font:600 .8rem var(--ui);font-variant-numeric:tabular-nums;white-space:nowrap}
+.hbar .trk .box{flex:1;display:flex;align-items:center;gap:.6rem;min-width:0}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(18rem,1fr));gap:1.6rem 2.4rem}
+.cols h3{font-size:1.25rem;margin-top:.5rem}
+details.sc{border-bottom:1px solid var(--rule);padding-block:.9rem}
+details.sc summary{cursor:pointer;font:600 1.3rem var(--display);list-style-position:outside}
+details.sc summary small{font:500 .74rem var(--ui);color:var(--ink-2);margin-left:.5rem}
+.tablewrap{overflow-x:auto;margin-top:1rem}
+table{border-collapse:collapse;width:100%;font:400 .9rem/1.4 var(--ui);min-width:38rem}
+th,td{padding:.5rem .6rem;border-bottom:1px solid var(--rule);text-align:left;vertical-align:top}
+th{font-weight:600;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);border-bottom:1px solid var(--ink)}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+.words{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.8rem}
+.words span{background:var(--rose-soft);padding:.25rem .6rem;border-radius:2px;font:500 .82rem var(--ui)}
+.words small{color:var(--ink-2);margin-left:.3rem}
+.vlist{display:grid;gap:.9rem;margin-top:1rem;max-height:34rem;overflow-y:auto;padding-right:.4rem}
+.vitem{padding:.8rem 1rem;background:var(--card);border-left:3px solid var(--rose)}
+.vitem p{overflow-wrap:anywhere}
+.vitem .meta{font:500 .72rem var(--ui);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);margin-top:.4rem;display:flex;gap:1rem;align-items:center;flex-wrap:wrap}
+.vitem.hid{opacity:.55;border-left-color:var(--ink-3)}
+.vitem .link{font-size:.74rem;padding:0}
+.method{margin-top:3rem;font-size:.92rem;color:var(--ink-2);border-top:3px double var(--ink);padding-top:1rem}
+.empty{margin-top:2rem;padding:2rem 1.4rem;border:1.5px dashed var(--ink-3);text-align:left}
+.empty h2{font-size:1.9rem}
+.empty p{margin-top:.6rem;max-width:34rem;color:var(--ink-2)}
+.empty .btn,.empty .btn.ghost{margin:1.1rem .6rem 0 0}
+
+/* report */
+.rpt{margin-top:1.6rem;background:var(--card);border:1px solid var(--rule);padding:clamp(1.1rem,4vw,2.4rem)}
+.rpt h1{font-size:clamp(2rem,6vw,3rem)}
+.rpt h2{font-size:1.65rem;margin-top:2.2rem;padding-bottom:.3rem;border-bottom:1px solid var(--ink)}
+.rpt p{margin-top:.8rem}
+.rpt ul{margin:.8rem 0 0;padding-left:1.2rem}
+.rpt li{margin-top:.45rem}
+.rpt blockquote{margin:.9rem 0 0;padding:.5rem 0 .5rem 1rem;border-left:3px solid var(--rose);font:italic 500 1.2rem/1.4 var(--display);overflow-wrap:anywhere}
+.rpt blockquote cite{display:block;font:500 .72rem var(--ui);letter-spacing:.08em;text-transform:uppercase;font-style:normal;color:var(--ink-2);margin-top:.2rem}
+.rpt .sub{font:500 .82rem var(--ui);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
+.export{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1.4rem;align-items:center}
+.export .btn{padding:.8rem 1.1rem}
+details.raw{margin-top:1.4rem}
+details.raw summary{cursor:pointer;font:500 .85rem var(--ui);color:var(--accent)}
+details.raw textarea{margin-top:.6rem;min-height:14rem;font:400 .82rem/1.5 ui-monospace,monospace}
+.foot{margin-top:3.5rem;padding-top:1rem;border-top:3px double var(--ink);font-size:.88rem;color:var(--ink-2)}
+.foot p+p{margin-top:.5rem}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+</style>
+
+<div class="wrap wide">
+<header class="mast">
+  <div class="row1">
+    <a class="brand" href="#home">The Unseen <i>Rules</i></a>
+    <span class="vol">IGDTUW Gender Equality Observatory · 2026</span>
+  </div>
+  <nav class="nav" aria-label="Sections" id="nav">
+    <a href="#home" data-r="home">Home</a>
+    <a href="#reality-check" data-r="reality-check">Reality Check</a>
+    <a href="#scenarios" data-r="scenarios">Scenarios</a>
+    <a href="#your-voice" data-r="your-voice">Your Voice</a>
+    <a href="#dashboard" data-r="dashboard">Dashboard</a>
+    <a href="#impact-report" data-r="impact-report">Impact Report</a>
+  </nav>
+</header>
+
+<div class="wrap">
+  <div class="progress" id="prog" aria-label="Your progress"></div>
+</div>
+
+<main>
+<!-- HOME -->
+<section class="view wrap" id="v-home">
+  <div class="hero">
+    <p class="eyebrow">Anonymous research · Indira Gandhi Delhi Technical University for Women</p>
+    <h1>How much of your life is decided by <em>unwritten</em> gender rules?</h1>
+    <p class="lede">Nobody handed you a rulebook, yet most of us can recite it: where to sit, when to be home, what to study, who cooks, who pays, who may cry. These rules shape women, men and everyone in between. This observatory asks IGDTUW students to look at them together, and to record what they see.</p>
+    <p style="margin-top:2rem"><a class="btn" id="startBtn" href="#reality-check">Start Experiment</a></p>
+    <div class="facts">
+      <div><b>3 parts</b>Check · Scenarios · Voice</div>
+      <div><b>About 10 min</b>Answer at your own pace</div>
+      <div><b>No login</b>No names, no email</div>
+    </div>
+    <p class="sync" id="liveCount" hidden></p>
+  </div>
+
+  <div class="phrases">
+    <p class="eyebrow">To begin the conversation</p>
+    <ul>
+      <li>Text me when you reach.</li>
+      <li>Don't argue with elders.</li>
+      <li>Learn to cook, just in case.</li>
+      <li>Boys don't cry.</li>
+      <li>A real man provides.</li>
+      <li>Girls should adjust.</li>
+    </ul>
+    <p class="small muted" style="margin-top:.9rem">Familiar phrases written by the organisers as prompts. They are not survey findings.</p>
+  </div>
+
+  <div class="parts">
+    <div><span>1</span><h3>Gender Reality Check</h3><p class="muted">Fifteen statements on stereotypes, careers, freedom, safety, money, emotions and housework. Some describe women's experience, some men's, some everyone's. Say how true each is in your life.</p></div>
+    <div><span>2</span><h3>Scenario Challenge</h3><p class="muted">Five everyday situations, some facing women, some men. Name the bias underneath, then choose the fairest response.</p></div>
+    <div><span>3</span><h3>Your Voice</h3><p class="muted">Share one stereotype, about any gender, that you want society to retire. One sentence, no name attached.</p></div>
+  </div>
+
+  <div class="why">
+    <p class="eyebrow">Why we are doing this</p>
+    <h2>Rules nobody wrote down are the hardest to question.</h2>
+    <p>Gender norms rarely arrive as written rules. They arrive as advice, jokes, curfews and expectations about who earns, who cooks, who may cry and who must be home before dark. Because they are unwritten, they are easy to mistake for "just how things are".</p>
+    <p>This observatory has three aims: to make those rules visible; to document which ones IGDTUW students say they see, for women, for men and for everyone; and to turn what we learn into practical suggestions for the campus and community. It supports the UN Sustainable Development Goal 5, Gender Equality.</p>
+    <p>Gender equality is not a women's issue alone. Rules that tell men to hide distress or carry every bill harm them and the people who love them. Rules that limit women's choices, freedom and safety harm everyone. We ask about both.</p>
+    <p class="eyebrow" style="margin-top:1.4rem">What we hope you take away</p>
+    <ul>
+      <li>Naming a rule is the first step to questioning it.</li>
+      <li>Many rules limit people of every gender, in different ways.</li>
+      <li>A fair response changes the situation, not only the person in it.</li>
+    </ul>
+    <p class="small muted" style="margin-top:1rem">A note on who is answering: respondents are students of a women's university, so what you report about men and boys is what you observe around you, not their own account. The report says so, and recommends bringing male students' voices in directly in the next round.</p>
+  </div>
+
+  <div class="notice">
+    <b>Privacy and care</b>
+    <p style="margin-top:.4rem">This page stores no name, email or device identifier with your answers. Taking part is voluntary and you can stop at any point. If a statement brings up something difficult, pause. In India, 112 is the emergency number and 181 is the Women Helpline. Your university's counselling service and Internal Committee can also help.</p>
+  </div>
+</section>
+
+<!-- REALITY CHECK -->
+<section class="view wrap" id="v-reality-check" hidden><p class="eyebrow">Part 1 · Gender Reality Check</p><div class="body" id="checkBody"></div></section>
+
+<!-- SCENARIOS -->
+<section class="view wrap" id="v-scenarios" hidden><p class="eyebrow">Part 2 · Scenario Challenge</p><div class="body" id="scenBody"></div></section>
+
+<!-- VOICE -->
+<section class="view wrap" id="v-your-voice" hidden><p class="eyebrow">Part 3 · Your Voice Matters</p><div class="body" id="voiceBody"></div></section>
+
+<!-- DASHBOARD -->
+<section class="view" id="v-dashboard" hidden><div id="dash"></div></section>
+
+<!-- REPORT -->
+<section class="view" id="v-impact-report" hidden><div id="rep"></div></section>
+</main>
+
+<footer class="foot wrap">
+  <p><b>The Unseen Rules · IGDTUW Gender Equality Observatory 2026.</b> Participation is anonymous and voluntary. Results describe the students who chose to respond. They are not a statistically representative sample and no significance testing is applied.</p>
+  <p>Emergency: 112 · Women Helpline: 181.</p>
+</footer>
+</div>
+
+<script>
+(function(){
+'use strict';
+
+/* ---------- Instrument ---------- */
+var THEMES=['Stereotypes','Career','Freedom','Safety','Money','Emotions','Household'];
+var SCALE=['Not true','Slightly true','Mostly true','Completely true'];
+/* dir 'c': the statement describes a constraint. dir 'p': it describes a freedom. w: who the statement describes (W women, M men, B everyone). */
+var Q=[
+ {t:'Stereotypes',d:'c',w:'W',x:'People around me expect women to be gentler and more agreeable than men in the same situation.'},
+ {t:'Stereotypes',d:'c',w:'M',x:'People around me expect men to be tough and to hide worry or weakness.'},
+ {t:'Career',d:'c',w:'W',x:'I have been advised to choose a career partly by how well it fits marriage or family plans.'},
+ {t:'Career',d:'c',w:'M',x:'Men around me are expected to pick the best-paid career over the one they enjoy.'},
+ {t:'Career',d:'p',w:'B',x:'My family would back me in taking the best job offer even if it meant moving to another city.'},
+ {t:'Freedom',d:'c',w:'W',x:'I am asked to account for where I am and when I will be back more than my male peers are.'},
+ {t:'Freedom',d:'c',w:'M',x:'Men around me are teased for interests seen as feminine, such as dance, design or caring work.'},
+ {t:'Safety',d:'c',w:'B',x:'I plan my routes, timings or companions mainly around safety.'},
+ {t:'Safety',d:'c',w:'M',x:'Boys and men around me are less likely to be believed or helped when they report harassment or violence.'},
+ {t:'Money',d:'c',w:'W',x:'In my family, major money decisions are made mostly by men.'},
+ {t:'Money',d:'c',w:'M',x:'Men around me are expected to be the main earner, whatever their circumstances.'},
+ {t:'Emotions',d:'c',w:'W',x:'A woman who shows anger is judged more harshly than a man who does the same.'},
+ {t:'Emotions',d:'c',w:'M',x:'Boys and men around me are discouraged from crying or asking for help.'},
+ {t:'Household',d:'c',w:'B',x:'Chores at home are divided by gender rather than by who is free.'},
+ {t:'Household',d:'c',w:'B',x:'Caregiving for children or elderly relatives is expected to fall mainly on women, and men who take it on are treated as unusual.'}
+];
+var WHOQ={W:'Women and girls',M:'Men and boys',B:'Everyone'};
+var SC=[
+ {title:'The site visit',
+  sit:'Two final-year students have identical placement scores. The hiring manager says the role needs travel and late hours, so he will shortlist the male candidate because "the girl wouldn\'t be comfortable". Nobody has asked her.',
+  bias:['A neutral business requirement of the role','Protective paternalism: deciding for her what she can handle','A fair preference for the candidate with more experience','Sensible caution about workplace risk'],br:1,
+  resp:['Accept it. The manager knows the role best.','Quietly suggest she withdraw so she is not uncomfortable','Describe the travel needs to both candidates, ask each whether they can meet them, and arrange safe logistics for whoever is hired','Hire the male candidate now and offer her a desk role later'],rr:2,
+  why:'Assuming a candidate\'s preferences from her gender takes away a choice that belongs to her. Equal scores call for an equal chance to say yes or no, with safety handled as a logistics matter for everyone.'},
+ {title:'The eight o\'clock rule',
+  sit:'A residence announces that women must be inside by 8 pm "for safety", while men face no deadline. Reports of harassment on the nearby road have increased.',
+  bias:['A neutral rule that applies for everyone\'s benefit','Women are less responsible with time','Safety framed as restricting potential victims instead of addressing the risk','An evidence-based response aimed at those causing the harm'],br:2,
+  resp:['Keep the rule. Safety matters more than freedom.','Apply the same deadline to everyone and stop there','Let women opt out by submitting written permission from parents','Improve lighting, transport and reporting, act against harassers, and make any timing rule apply equally to all residents'],rr:3,
+  why:'A restriction on the people at risk leaves the source of the risk in place. Fixing the road, the transport and the enforcement protects everyone and keeps freedom of movement equal.'},
+ {title:'The earning son',
+  sit:'A first-year student who loves design is told by his family that, as the only son, he must switch to the course with the highest starting salary because he will have to support everyone. Nobody asks what he wants.',
+  bias:['Sensible financial planning for the family','Breadwinner expectation: a man\'s choices and worth are tied to earning','Respect for the experience of elders','A fair division of duties between siblings'],br:1,
+  resp:['Switch courses without discussion. Family comes first.','Tell him dreams are a luxury he cannot afford','Hold an open family conversation about money, options and every child\'s future, and let him weigh in on his own career','Move the earning duty to his sister without asking her'],rr:2,
+  why:'Treating a son as the family\'s income closes off choices he might make for himself, just as treating a daughter as a future spouse closes off hers. A shared conversation about money and options respects both.'},
+ {title:'Man up',
+  sit:'After failing a semester exam, a male student is visibly low. His friends tease him for being "like a girl" when he mentions the counselling centre, so he stops going.',
+  bias:['Harmless banter that builds resilience','A fair comment on how he handles setbacks','Concern that counselling is only for serious illness','A stereotype that men must be unshakeable, and that asking for help is weak or feminine'],br:3,
+  resp:['Tell him to toughen up and drop it','Stop the teasing, reassure him that asking for help is normal, check in privately, and make the counselling service easy for any student to use','Leave the group to sort it out themselves','Advise him to keep it quiet so he is not teased again'],rr:1,
+  why:'When seeking help is mocked as feminine, men lose support at the moment they need it, and women are put down in the same breath. Making help normal for everyone removes the stigma from both.'},
+ {title:'After the family function',
+  sit:'Home after a family function, a brother and sister who have both come back from hostel are tired. The sister is asked to help clear the kitchen. The brother is told to rest.',
+  bias:['Gendered domestic labour: household work assumed to belong to women','Respect owed to the elder sibling','The sister is simply better at kitchen work','Parents responding to whoever looked more tired'],br:0,
+  resp:['Let it pass to avoid an argument at the function','Ask the brother to help as a favour to her','Agree a standing arrangement where every adult in the house shares chores on a roster, whatever their gender','Excuse the sister this time and ask the mother to do it'],rr:2,
+  why:'A request that lands on one sibling because of gender teaches both of them what to expect. A shared roster replaces the unspoken rule with a visible, equal one.'}
+];
+var CATS=['Career and ambition','Family and marriage','Safety and freedom','Money and independence','Emotions and behaviour','Appearance','Education and skills','Other'];
+var WHO=['Mostly women and girls','Mostly men and boys','Everyone','Not sure'];
+var ROUTES=['home','reality-check','scenarios','your-voice','dashboard','impact-report'];
+
+/* ---------- Helpers ---------- */
+function $(s,r){return (r||document).querySelector(s)}
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function pct(x){return Math.round(x*100)}
+function mkId(){var a=new Uint8Array(12);try{crypto.getRandomValues(a)}catch(e){for(var i=0;i<12;i++)a[i]=Math.floor(Math.random()*256)}return Array.prototype.map.call(a,function(b){return ('0'+b.toString(16)).slice(-2)}).join('')}
+function fmtDate(t){return new Date(t).toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'})}
+
+/* ---------- Local state (this device only) ---------- */
+var KEY='unseen-rules-v1';
+var state={rid:null,vid:null,ts:0,sentR:-1,sentV:0,q:Q.map(function(){return null}),qi:0,p1:false,s:SC.map(function(){return null}),si:0,draft:null,p2:false,voice:null};
+try{var saved=localStorage.getItem(KEY);if(saved){var o=JSON.parse(saved);for(var k in o){if(k in state)state[k]=o[k]}}}catch(e){}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
+
+/* ---------- Shared store (optional) ---------- */
+var db=null,userCap=null,dl=null,canEdit=false;
+var remote={responses:[],voices:[],ready:false,err:false};
+var sync={resp:'none',voice:'none'}; /* none | shared | local | blocked */
+var chain=Promise.resolve();
+function queueWrite(path,body,key){
+  if(!db){sync[key]='local';return}
+  chain=chain.then(function(){return db.doc(path).set(body)}).then(function(){sync[key]='shared';markSent(key);refreshNotes()}).catch(function(e){
+    if(e&&e.code==='unavailable'){return new Promise(function(r){setTimeout(r,800)}).then(function(){return db.doc(path).set(body)}).then(function(){sync[key]='shared';markSent(key);refreshNotes()}).catch(function(){sync[key]='local';refreshNotes()})}
+    sync[key]=(e&&e.code==='invalid_argument')?'blocked':'local';refreshNotes();
+  });
+}
+function markSent(key){if(key==='resp')state.sentR=(state.p1?1:0)+(state.p2?2:0);else state.sentV=1;persist()}
+function pushResponse(){
+  if(!state.rid)state.rid=mkId();if(!state.ts)state.ts=Date.now();persist();
+  queueWrite('responses/'+state.rid,{v:1,ts:state.ts,q:state.p1?state.q.slice():null,s:state.p2?state.s.slice():null},'resp');
+}
+function pushVoice(){
+  if(!state.vid)state.vid=mkId();persist();
+  queueWrite('voices/'+state.vid,{v:1,ts:state.voice.ts,cat:state.voice.cat,who:state.voice.who,text:state.voice.text},'voice');
+}
+function syncText(key){
+  var s=sync[key];
+  if(s==='shared')return 'Added to the shared dataset. Nothing identifying was stored with it.';
+  if(s==='blocked')return 'Saved on this device only. This view can read the shared dataset but is not permitted to add to it.';
+  if(s==='local'||!db)return 'Saved on this device only. The shared dataset could not be reached from this view, so this entry will not appear in the pooled results.';
+  return 'Saving…';
+}
+function refreshNotes(){
+  var a=$('#syncResp'),b=$('#syncVoice');
+  if(a)a.textContent=syncText('resp');if(b)b.textContent=syncText('voice');
+}
+
+/* ---------- Progress ---------- */
+function renderProgress(){
+  var a=state.q.filter(function(v){return v!==null}).length,b=state.s.filter(function(v){return v}).length,c=state.voice?1:0;
+  var steps=[['reality-check','1 · Reality Check',a,15],['scenarios','2 · Scenarios',b,5],['your-voice','3 · Your Voice',c,1]];
+  $('#prog').innerHTML='<ol>'+steps.map(function(s){var done=s[2]>=s[3];return '<li class="'+(done?'done':'')+'"><a href="#'+s[0]+'"><b>'+s[1]+'</b>'+s[2]+' of '+s[3]+(done?' · complete':'')+'<div class="bar2"><i style="width:'+(s[2]/s[3]*100)+'%"></i></div></a></li>'}).join('')+'</ol>';
+  var st=$('#startBtn');if(st)st.textContent=(a>0||b>0||c>0)?'Continue Experiment':'Start Experiment';
+}
+
+/* ---------- Part 1 ---------- */
+var lock=false;
+function renderCheck(){
+  var el=$('#checkBody');
+  if(state.p1){
+    el.innerHTML='<h2 class="statement" style="margin-top:.6rem">Part 1 complete.</h2><p class="lede" style="font-size:1.1rem">Thank you. Fifteen statements answered, with no score attached. The patterns only mean something when many students are read together.</p><p class="sync" id="syncResp" role="status"></p><p style="margin-top:1.6rem"><a class="btn" href="#scenarios">Continue to scenarios</a></p><p style="margin-top:1rem"><button class="link" id="redo">Change an answer</button></p>';
+    refreshNotes();
+    $('#redo').onclick=function(){state.p1=false;state.qi=0;persist();renderCheck();renderProgress()};
+    return;
+  }
+  var i=state.qi,q=Q[i],cur=state.q[i];
+  el.innerHTML='<div class="qhead"><span class="eyebrow" style="margin:0">Statement '+(i+1)+' of 15 · '+q.t+'</span><div class="mini"><i style="width:'+(i/15*100)+'%"></i></div></div>'+
+   '<h2 class="statement">'+esc(q.x)+'</h2><p class="prompt" id="qp">How true is this in your own life or surroundings?</p>'+
+   '<div class="opts" role="radiogroup" aria-labelledby="qp">'+SCALE.map(function(s,k){return '<button class="opt" role="radio" aria-checked="'+(cur===k)+'" data-v="'+k+'"><span class="dot"></span>'+s+'</button>'}).join('')+
+   '<button class="opt skip" role="radio" aria-checked="'+(cur===-1)+'" data-v="-1"><span class="dot"></span>Prefer not to say</button></div>'+
+   '<div class="navrow"><button class="link" id="qBack"'+(i?'':' disabled')+'>← Previous</button><span class="small muted">Tap an answer to continue</span></div>';
+  el.onclick=function(e){
+    var b=e.target.closest('.opt');if(b&&!lock){
+      lock=true;var v=parseInt(b.getAttribute('data-v'),10);state.q[i]=v;persist();
+      Array.prototype.forEach.call(el.querySelectorAll('.opt'),function(x){x.setAttribute('aria-checked',x===b?'true':'false')});
+      setTimeout(function(){lock=false;if(i<Q.length-1){state.qi=i+1}else{state.p1=true;pushResponse()}persist();renderCheck();renderProgress();window.scrollTo(0,0)},260);
+    }
+    if(e.target.id==='qBack'&&i>0){state.qi=i-1;persist();renderCheck()}
+  };
+}
+
+/* ---------- Part 2 ---------- */
+function optList(arr,sel,name,lockIt,ref){
+  return '<div class="opts" role="radiogroup" aria-label="'+name+'">'+arr.map(function(t,k){return '<button class="opt'+(lockIt&&k===ref?' ref':'')+'" role="radio" aria-checked="'+(sel===k)+'" data-v="'+k+'"'+(lockIt?' disabled':'')+'><span class="dot"></span><span>'+esc(t)+'</span>'+(lockIt&&k===ref?'<span class="tag">Reference</span>':'')+'</button>'}).join('')+'</div>';
+}
+function renderScen(){
+  var el=$('#scenBody');
+  if(state.p2){
+    el.innerHTML='<h2 class="statement" style="margin-top:.6rem">Part 2 complete.</h2><p class="lede" style="font-size:1.1rem">Five scenarios done. There are no marks here. The reflections are the organisers\' reading, offered for discussion.</p><p class="sync" id="syncResp" role="status"></p><p style="margin-top:1.6rem"><a class="btn" href="#your-voice">Continue to Your Voice</a></p><p style="margin-top:1rem"><button class="link" id="redo2">Revisit the scenarios</button></p>';
+    refreshNotes();
+    $('#redo2').onclick=function(){state.p2=false;state.si=0;state.draft=null;persist();renderScen();renderProgress()};
+    return;
+  }
+  var i=state.si,s=SC[i],ans=state.s[i],bSel=ans?ans[0]:state.draft,fSel=ans?ans[1]:null;
+  var h='<div class="qhead"><span class="eyebrow" style="margin:0">Scenario '+(i+1)+' of 5</span><div class="mini"><i style="width:'+(i/5*100)+'%"></i></div></div>'+
+   '<h2 class="statement">'+esc(s.title)+'</h2><p class="situation">'+esc(s.sit)+'</p>'+
+   '<p class="step-q">Question A</p><h3 class="step-t">Which underlying bias is most evident?</h3>'+optList(s.bias,bSel,'Underlying bias',!!ans,s.br);
+  if(bSel!==null&&bSel!==undefined){
+    h+='<p class="step-q">Question B</p><h3 class="step-t">Which response would be fairest?</h3>'+optList(s.resp,fSel,'Fairest response',!!ans,s.rr);
+  }
+  if(ans){
+    h+='<div class="reflect"><b>Reflection</b>'+esc(s.why)+'<p class="small muted" style="margin-top:.6rem">The reference answers mark the organisers\' reading of each case. They are a prompt for discussion, not a measured standard.</p></div>'+
+       '<div class="navrow"><span></span><button class="btn" id="nextSc">'+(i<SC.length-1?'Next scenario':'Finish scenarios')+'</button></div>';
+  }
+  el.innerHTML=h;
+  el.onclick=function(e){
+    var b=e.target.closest('.opt');
+    if(b&&!ans){
+      var grp=b.parentNode.getAttribute('aria-label'),v=parseInt(b.getAttribute('data-v'),10);
+      if(grp==='Underlying bias'){state.draft=v;persist();renderScen();}
+      else{state.s[i]=[state.draft,v];persist();renderScen();renderProgress()}
+    }
+    if(e.target.id==='nextSc'){
+      state.draft=null;
+      if(i<SC.length-1){state.si=i+1}else{state.p2=true;pushResponse()}
+      persist();renderScen();renderProgress();window.scrollTo(0,0);
+    }
+  };
+}
+
+/* ---------- Part 3 ---------- */
+var voiceCat=null,voiceWho=null;
+function renderVoice(){
+  var el=$('#voiceBody');
+  if(state.voice){
+    el.innerHTML='<h2 class="statement" style="margin-top:.6rem">Thank you for adding your voice.</h2><p class="mine">'+esc(state.voice.text)+'</p><p class="small muted" style="margin-top:.6rem">'+esc(CATS[state.voice.cat])+(Number.isInteger(state.voice.who)?' · '+esc(WHO[state.voice.who]):'')+'</p><p class="sync" id="syncVoice" role="status"></p><p style="margin-top:1.6rem"><a class="btn" href="#dashboard">See the dashboard</a> <a class="btn ghost" href="#impact-report">Impact report</a></p>';
+    refreshNotes();return;
+  }
+  el.innerHTML='<h2 class="statement" style="margin-top:.6rem">Which gender stereotype, about anyone, should society retire?</h2><p class="prompt">It can be about women, about men, or about everyone. One sentence is enough. Describe the stereotype itself, and leave out names, phone numbers, emails and social media handles.</p>'+
+   '<form id="vf" style="margin-top:1.3rem" novalidate><label class="eyebrow" for="vt">Your stereotype</label><textarea id="vt" maxlength="280" placeholder="For example: …" style="margin-top:.5rem"></textarea><div class="count" id="vc">0 / 280</div>'+
+   '<p class="eyebrow" style="margin-top:1.2rem" id="catl">Closest theme</p><div class="chips" role="radiogroup" aria-labelledby="catl">'+CATS.map(function(c,k){return '<button type="button" class="chip" role="radio" aria-checked="false" data-c="'+k+'">'+c+'</button>'}).join('')+'</div>'+
+   '<p class="eyebrow" style="margin-top:1.2rem" id="whol">Who it mostly affects</p><div class="chips" role="radiogroup" aria-labelledby="whol">'+WHO.map(function(c,k){return '<button type="button" class="chip" role="radio" aria-checked="false" data-w="'+k+'">'+c+'</button>'}).join('')+'</div>'+
+   '<p class="err" id="ve" role="alert" hidden></p><p style="margin-top:1.4rem"><button class="btn" type="submit">Submit anonymously</button></p></form>'+
+   '<p class="small muted" style="margin-top:1rem">Statements are shown on the dashboard without any identifying detail. Organisers can hide entries that name individuals or are abusive.</p>';
+  voiceCat=null;voiceWho=null;
+  var t=$('#vt');t.oninput=function(){$('#vc').textContent=t.value.length+' / 280'};
+  $('#vf').onclick=function(e){var c=e.target.closest('.chip');if(!c)return;
+    Array.prototype.forEach.call(c.parentNode.querySelectorAll('.chip'),function(x){x.setAttribute('aria-checked',x===c?'true':'false')});
+    if(c.hasAttribute('data-c'))voiceCat=parseInt(c.getAttribute('data-c'),10);else voiceWho=parseInt(c.getAttribute('data-w'),10)};
+  $('#vf').onsubmit=function(e){
+    e.preventDefault();var text=t.value.replace(/\s+/g,' ').trim(),er=$('#ve');
+    function fail(m){er.textContent=m;er.hidden=false}
+    if(text.length<12)return fail('Please write a little more, at least a short sentence.');
+    if(voiceCat===null)return fail('Please choose the closest theme.');
+    if(voiceWho===null)return fail('Please say who it mostly affects, or choose "Not sure".');
+    if(/[\w.+-]+@[\w-]+\.[\w.]+/.test(text)||/\d[\d\s-]{7,}\d/.test(text)||/https?:\/\/|www\./i.test(text)||/(^|\s)@\w{2,}/.test(text))return fail('Please remove emails, phone numbers, links or @handles so the entry stays anonymous.');
+    state.voice={text:text,cat:voiceCat,who:voiceWho,ts:Date.now()};persist();pushVoice();renderVoice();renderProgress();
+  };
+}
+
+/* ---------- Analysis (works on any dataset) ---------- */
+var STOP='about after again also always because been being could does doing done from have into just like more most much must never only other over people should some such than that their them then there these they this those very want were what when where which while will with would your women woman men girls girl boys being expected expect'.split(' ');
+function analyse(d){
+  var R=d.responses.filter(function(r){return r&&typeof r==='object'});
+  var p1=R.filter(function(r){return Array.isArray(r.q)&&r.q.length===Q.length});
+  var p2=R.filter(function(r){return Array.isArray(r.s)&&r.s.length===SC.length});
+  var perQ=Q.map(function(q,i){var c=[0,0,0,0],skip=0;p1.forEach(function(r){var v=r.q[i];if(Number.isInteger(v)&&v>=0&&v<=3)c[v]++;else skip++});var n=c[0]+c[1]+c[2]+c[3];return {c:c,n:n,skip:skip,share:n?((q.d==='c'?c[2]+c[3]:c[0]+c[1])/n):null}});
+  var perT=THEMES.map(function(t){var sh=[];perQ.forEach(function(p,i){if(Q[i].t===t&&p.share!==null)sh.push(p.share)});return {t:t,share:sh.length?sh.reduce(function(a,b){return a+b},0)/sh.length:null}});
+  var perS=SC.map(function(s,i){var b=[0,0,0,0],f=[0,0,0,0],n=0;p2.forEach(function(r){var a=r.s[i];if(Array.isArray(a)&&Number.isInteger(a[0])&&Number.isInteger(a[1])&&a[0]>=0&&a[0]<4&&a[1]>=0&&a[1]<4){b[a[0]]++;f[a[1]]++;n++}});return {b:b,f:f,n:n}});
+  var V=d.voices.filter(function(v){return v&&typeof v.text==='string'&&Number.isInteger(v.cat)&&v.cat>=0&&v.cat<CATS.length});
+  var vis=V.filter(function(v){return !v.hidden});
+  var cc=CATS.map(function(){return 0});vis.forEach(function(v){cc[v.cat]++});
+  var wc={};vis.forEach(function(v){var seen={};v.text.toLowerCase().replace(/[^a-z\s'-]/g,' ').split(/\s+/).forEach(function(w){w=w.replace(/^['-]+|['-]+$/g,'');if(w.length>=4&&STOP.indexOf(w)<0&&!seen[w]){seen[w]=1;wc[w]=(wc[w]||0)+1}})});
+  var words=Object.keys(wc).map(function(w){return [w,wc[w]]}).filter(function(x){return x[1]>=2}).sort(function(a,b){return b[1]-a[1]||(a[0]<b[0]?-1:1)}).slice(0,14);
+  var wh=WHO.map(function(){return 0});vis.forEach(function(v){if(Number.isInteger(v.who)&&v.who>=0&&v.who<WHO.length)wh[v.who]++});
+  var perW=['W','M','B'].map(function(g){var sh=[],k=0;perQ.forEach(function(p,i){if(Q[i].w===g){k++;if(p.share!==null)sh.push(p.share)}});return {g:g,k:k,share:sh.length?sh.reduce(function(a,b){return a+b},0)/sh.length:null}});
+  var ts=R.map(function(r){return r.ts}).concat(V.map(function(v){return v.ts})).filter(function(x){return typeof x==='number'});
+  return {p1:p1,p2:p2,perQ:perQ,perT:perT,perS:perS,V:V,vis:vis,hidden:V.length-vis.length,cc:cc,wh:wh,perW:perW,words:words,t0:ts.length?Math.min.apply(null,ts):null,t1:ts.length?Math.max.apply(null,ts):null};
+}
+function findings(A){
+  var out=[];
+  out.push(A.p1.length+' submissions completed the Reality Check, '+A.p2.length+' completed the Scenario Challenge, and '+A.vis.length+' students shared a stereotype.');
+  if(A.p1.length<10){out.push('Statement-level findings appear once at least 10 Reality Check submissions are collected, so that a handful of answers is not read as a pattern.');return out}
+  var rk=A.perQ.map(function(p,i){return {i:i,n:p.n,share:p.share}}).filter(function(x){return x.n>0}).sort(function(a,b){return b.share-a.share});
+  var hi=rk[0],lo=rk[rk.length-1];
+  out.push('Most often answered in a way that indicates a constraint: "'+Q[hi.i].x+'" ('+pct(hi.share)+'%, n = '+hi.n+').');
+  if(lo&&lo.i!==hi.i)out.push('Least often: "'+Q[lo.i].x+'" ('+pct(lo.share)+'%, n = '+lo.n+').');
+  var th=A.perT.filter(function(x){return x.share!==null}).sort(function(a,b){return b.share-a.share});
+  if(th.length>1)out.push('By theme, "'+th[0].t+'" showed the highest average constraint share ('+pct(th[0].share)+'%) and "'+th[th.length-1].t+'" the lowest ('+pct(th[th.length-1].share)+'%).');
+  var pw=A.perW.filter(function(x){return x.share!==null});
+  if(pw.length===3)out.push('Average constraint share by who the statement describes: women and girls '+pct(A.perW[0].share)+'%, men and boys '+pct(A.perW[1].share)+'%, everyone '+pct(A.perW[2].share)+'%. The statements differ, so this shows where respondents see constraints and does not rank who is more affected.');
+  if(A.p2.length>=10){
+    var sc=A.perS.map(function(p,i){return {i:i,n:p.n,b:p.n?p.b[SC[i].br]/p.n:null,f:p.n?p.f[SC[i].rr]/p.n:null}}).filter(function(x){return x.n>0});
+    var lb=sc.slice().sort(function(a,b){return a.b-b.b})[0];
+    var lf=sc.slice().sort(function(a,b){return a.f-b.f})[0];
+    out.push('Scenario "'+SC[lb.i].title+'" had the lowest share choosing the reference bias ('+pct(lb.b)+'%, n = '+lb.n+'). Scenario "'+SC[lf.i].title+'" had the lowest share choosing the reference response ('+pct(lf.f)+'%, n = '+lf.n+').');
+  }
+  if(A.vis.length>=5){var mi=0;A.cc.forEach(function(c,i){if(c>A.cc[mi])mi=i});out.push('The most common theme among shared stereotypes was "'+CATS[mi]+'" ('+A.cc[mi]+' of '+A.vis.length+').')}
+  return out;
+}
+
+/* ---------- Demonstration data ---------- */
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function makeDemo(){
+  var r=rng(2026),R=[],V=[],i;
+  for(i=0;i<120;i++){R.push({ts:0,q:Q.map(function(){return r()<.08?-1:Math.floor(r()*4)}),s:SC.map(function(){return [Math.floor(r()*4),Math.floor(r()*4)]})})}
+  for(i=0;i<8;i++){V.push({id:'demo'+i,ts:0,cat:i%CATS.length,text:'Placeholder statement number '+(i+1)+' for layout demonstration only.'})}
+  return {responses:R,voices:V};
+}
+var demoData=null;
+
+/* ---------- Dashboard ---------- */
+var demo=false,themeFilter='All',tableView=false;
+function localData(){
+  var R=(state.p1||state.p2)?[{ts:Date.now(),q:state.p1?state.q.slice():null,s:state.p2?state.s.slice():null}]:[];
+  var V=state.voice?[{id:'local',ts:state.voice.ts,cat:state.voice.cat,text:state.voice.text}]:[];
+  return {responses:R,voices:V};
+}
+function dataset(){
+  if(demo){if(!demoData)demoData=makeDemo();return {responses:demoData.responses,voices:demoData.voices,label:'demo'}}
+  if(db)return {responses:remote.responses,voices:remote.voices,label:'shared'};
+  var l=localData();return {responses:l.responses,voices:l.voices,label:'device'};
+}
+function stackBar(c,n){
+  if(!n)return '<div class="bar"><span class="none">No answers yet</span></div>';
+  return '<div class="bar" role="img" aria-label="'+SCALE.map(function(s,k){return s+' '+pct(c[k]/n)+'%'}).join(', ')+'">'+c.map(function(v,k){var p=v/n*100;return v>0?'<span class="seg s'+k+'" style="width:'+p+'%">'+(p>=11?Math.round(p)+'%':'')+'</span>':''}).join('')+'</div>';
+}
+function hbar(label,count,n,isRef,tag,pv){
+  var p=pv!==undefined?pv:(n?count/n:0);
+  return '<div class="hbar"><div class="lab">'+esc(label)+(tag?' <span class="tag" style="margin-left:.4rem">'+tag+'</span>':'')+'</div><div class="trk"><div class="box"><i class="'+(isRef?'r':'')+'" style="width:'+Math.max(p*100,0)+'%;max-width:calc(100% - 3.2rem)"></i><span>'+pct(p)+'%</span></div>'+(pv!==undefined?'':'<span class="muted">'+count+'</span>')+'</div></div>';
+}
+function renderDash(){
+  var root=$('#dash'),d=dataset(),A=analyse(d);
+  var wrap='<div class="wrap wide'+(demo?' is-demo':'')+'">';
+  var head='<div class="dh"><div><p class="eyebrow">Research Dashboard</p><h1 style="margin-top:.5rem">What students reported</h1></div><div class="seg-ctl" role="group" aria-label="Data source"><button data-act="src" data-v="real" aria-pressed="'+(!demo)+'">Collected data</button><button data-act="src" data-v="demo" aria-pressed="'+demo+'">Demonstration data</button></div></div>';
+  var banner;
+  if(demo)banner='<div class="banner demo" role="note"><b>Demonstration data.</b> Random placeholder numbers generated inside this page so you can see the layout. They are not survey results, they come from no student, and they must not be quoted or reported. The Impact Report never uses them.</div>';
+  else if(d.label==='shared')banner='<div class="banner real" role="note"><b>Collected data.</b> '+(remote.ready?'Every figure below comes from anonymous submissions made through this page.':'Connecting to the shared dataset…')+(remote.err?' The live connection reported an error, so figures may be out of date.':'')+'</div>';
+  else banner='<div class="banner info" role="note"><b>Collected data, this device only.</b> The shared dataset is not reachable from this view, so this dashboard shows only answers entered on this device (n = '+A.p1.length+'). It is not a pooled result.</div>';
+  var h=wrap+head+banner;
+  if(!demo&&A.p1.length===0&&A.p2.length===0&&A.vis.length===0){
+    h+='<div class="empty"><h2>No responses collected yet.</h2><p>This dashboard fills as students complete the experiment. Nothing is shown here until real answers exist.</p><a class="btn" href="#reality-check">Take part</a><button class="btn ghost" data-act="src" data-v="demo">Preview the layout with demonstration data</button></div></div>';
+    root.innerHTML=h;return;
+  }
+  h+='<dl class="stats"><div><dt>Reality Check</dt><dd>'+A.p1.length+'</dd></div><div><dt>Scenarios</dt><dd>'+A.p2.length+'</dd></div><div><dt>Stereotypes shared</dt><dd>'+A.vis.length+'</dd></div><div><dt>Data window</dt><dd class="sm">'+(demo?'Not applicable':(A.t0?fmtDate(A.t0)+(A.t1&&fmtDate(A.t1)!==fmtDate(A.t0)?' to '+fmtDate(A.t1):''):'Not recorded'))+'</dd></div></dl>';
+  if(A.p1.length>0&&A.p1.length<30)h+='<p class="small muted" style="margin-top:.8rem">Small sample ('+A.p1.length+' Reality Check submissions). Percentages move a lot when a few more students respond, so read them as indicative only.</p>';
+  h+='<section class="dsec"><h2>Key findings</h2><ul class="finds">'+findings(A).map(function(f){return '<li>'+esc(f)+'</li>'}).join('')+'</ul></section>';
+
+  /* Reality check */
+  h+='<section class="dsec"><h2>Gender Reality Check</h2><p class="lead">How true each statement is, in the respondents\' own words and experience. Percentages are shares of those who answered that statement.</p>';
+  h+='<div class="chips" role="group" aria-label="Filter by theme">'+['All'].concat(THEMES).map(function(t){return '<button class="chip" data-act="theme" data-v="'+t+'" aria-pressed="'+(themeFilter===t)+'">'+t+'</button>'}).join('')+'<button class="chip" data-act="table" aria-pressed="'+tableView+'" style="margin-left:auto">'+(tableView?'Show bars':'Show table')+'</button></div>';
+  var items=Q.map(function(q,i){return i}).filter(function(i){return themeFilter==='All'||Q[i].t===themeFilter});
+  if(tableView){
+    h+='<div class="tablewrap fig"><table><thead><tr><th>Statement</th><th>Theme</th><th class="num">n</th>'+SCALE.map(function(s){return '<th class="num">'+s+'</th>'}).join('')+'<th class="num">Skipped</th></tr></thead><tbody>'+items.map(function(i){var p=A.perQ[i];return '<tr><td>'+esc(Q[i].x)+'</td><td>'+Q[i].t+'</td><td class="num">'+p.n+'</td>'+p.c.map(function(v){return '<td class="num">'+(p.n?pct(v/p.n)+'%':'–')+'</td>'}).join('')+'<td class="num">'+p.skip+'</td></tr>'}).join('')+'</tbody></table></div>';
+  }else{
+    h+='<div class="legend" aria-hidden="false">'+SCALE.map(function(s,k){return '<span class="l'+k+'">'+s+'</span>'}).join('')+'</div><div class="fig">'+items.map(function(i){var p=A.perQ[i];return '<article class="item"><p class="stmt">'+esc(Q[i].x)+'</p><div class="meta">'+Q[i].t.toUpperCase()+' · n = '+p.n+(p.skip?' · '+p.skip+' preferred not to say':'')+'</div>'+stackBar(p.c,p.n)+'</article>'}).join('')+'</div>';
+  }
+  h+='</section>';
+
+  /* Theme */
+  h+='<section class="dsec"><h2>Constraint by theme</h2><p class="lead">For statements that describe a constraint, the share answering "Mostly true" or "Completely true". For statements that describe a freedom, the share answering "Not true" or "Slightly true". Each bar is the plain average of the statements in that theme.</p><div class="fig">'+A.perT.map(function(t){return t.share===null?'<div class="hbar"><div class="lab">'+t.t+'</div><div class="muted small">No answers yet</div></div>':hbar(t.t,0,0,false,'',t.share)}).join('')+'</div></section>';
+
+  /* Women, men, everyone */
+  h+='<section class="dsec"><h2>Women, men and everyone</h2><p class="lead">The statements describe different groups: '+A.perW.map(function(g){return WHOQ[g.g].toLowerCase()+' ('+g.k+')'}).join(', ')+'. Each bar is the average constraint share across that group\'s statements. Because the statements differ, read this as where respondents see constraints, not as which gender is more affected. Respondents are students of a women\'s university, so statements about men and boys reflect what students observe around them.</p><div class="fig">'+A.perW.map(function(g){return g.share===null?'<div class="hbar"><div class="lab">'+WHOQ[g.g]+'</div><div class="muted small">No answers yet</div></div>':hbar(WHOQ[g.g]+' ('+g.k+' statements)',0,0,false,'',g.share)}).join('')+'</div></section>';
+
+  /* Scenarios */
+  h+='<section class="dsec"><h2>Scenario Challenge</h2><p class="lead">Which bias respondents named and which response they chose as fairest. The reference option is the organisers\' reading, marked for context.</p><div class="fig">'+SC.map(function(s,i){var p=A.perS[i];return '<details class="sc"'+(i===0?' open':'')+'><summary>'+esc(s.title)+'<small>n = '+p.n+'</small></summary><div class="cols"><div><h3>Bias identified</h3>'+s.bias.map(function(b,k){return hbar(b,p.b[k],p.n,k===s.br,k===s.br?'Reference':'')}).join('')+'</div><div><h3>Chosen as fairest</h3>'+s.resp.map(function(b,k){return hbar(b,p.f[k],p.n,k===s.rr,k===s.rr?'Reference':'')}).join('')+'</div></div></details>'}).join('')+'</div></section>';
+
+  /* Stereotypes */
+  h+='<section class="dsec"><h2>Stereotypes students want retired</h2><p class="lead">Submitted anonymously in students\' own words. Themes were chosen by the students themselves.</p><div class="cols fig"><div><h3>By theme</h3>'+CATS.map(function(c,k){return hbar(c,A.cc[k],A.vis.length,false)}).join('')+'</div><div><h3>Most frequent words</h3>'+(A.words.length?'<div class="words">'+A.words.map(function(w){return '<span>'+esc(w[0])+'<small>'+w[1]+'</small></span>'}).join('')+'</div><p class="small muted" style="margin-top:.6rem">Words appearing in at least two separate statements. Small words are ignored.</p>':'<p class="muted small" style="margin-top:.6rem">Words appear here once at least two statements share them.</p>')+'</div><div><h3>Who it mostly affects</h3>'+WHO.map(function(w,k){return hbar(w,A.wh[k],A.vis.length,false)}).join('')+'</div></div>';
+  var list=(canEdit&&!demo&&d.label==='shared')?A.V:A.vis;
+  list=list.slice().sort(function(a,b){return (b.ts||0)-(a.ts||0)}).slice(0,60);
+  h+='<h3 style="margin-top:2rem;font-size:1.4rem">In their words</h3>'+(list.length?'<div class="vlist">'+list.map(function(v){return '<div class="vitem'+(v.hidden?' hid':'')+'"><p>'+esc(v.text)+'</p><div class="meta"><span>'+esc(CATS[v.cat])+(Number.isInteger(v.who)&&WHO[v.who]?' · '+esc(WHO[v.who]):'')+'</span>'+(canEdit&&!demo&&d.label==='shared'&&v.id?'<button class="link" data-act="hide" data-id="'+esc(v.id)+'" data-h="'+(v.hidden?'0':'1')+'">'+(v.hidden?'Restore':'Hide')+'</button>':'')+(v.hidden?'<span>Hidden</span>':'')+'</div></div>'}).join('')+'</div>':'<p class="muted" style="margin-top:.6rem">No statements shared yet.</p>')+'</section>';
+
+  h+='<div class="method"><p><b>How to read this page.</b> Figures are descriptive counts and percentages from a self-selected group of respondents. Respondents are students of a women\'s university, so statements about men and boys reflect what students observe, not men\'s own accounts. They do not represent all IGDTUW students, no confidence intervals or significance tests are reported, and the same person could submit more than once because the page deliberately records no identity.</p></div></div>';
+  root.innerHTML=h;
+}
+document.addEventListener('click',function(e){
+  var b=e.target.closest('[data-act]');if(!b)return;var a=b.getAttribute('data-act');
+  if(a==='src'){demo=b.getAttribute('data-v')==='demo';renderDash()}
+  else if(a==='theme'){themeFilter=b.getAttribute('data-v');renderDash()}
+  else if(a==='table'){tableView=!tableView;renderDash()}
+  else if(a==='hide'&&db){var id=b.getAttribute('data-id'),hide=b.getAttribute('data-h')==='1';db.doc('voices/'+id).update({hidden:hide}).catch(function(){})}
+});
+
+/* ---------- Impact report (collected data only) ---------- */
+var REC_THEME={
+ Stereotypes:'**Stereotypes.** Run a short bias-awareness session for faculty and student leaders, and agree classroom norms on airtime and on how tasks are assigned, so that no role is treated as belonging to one gender.',
+ Career:'**Career.** Pair students with alumnae and professionals in technical roles, ask placement teams to present every role, including travel-heavy ones, to all candidates and let each decide, and talk openly about the pressure on men to choose the best-paid path.',
+ Freedom:'**Freedom.** Publish residence and campus rules that apply equally to all residents, and make room for interests and choices that cut across gender labels.',
+ Safety:'**Safety.** Map lighting, last-mile transport and reporting routes around the campus, publish a dated list of fixes, and make sure reporting channels work for people of every gender. Treat the risk, not the people at risk, as the thing to change.',
+ Money:'**Money.** Offer workshops on budgeting, investing and salary negotiation, with materials students can share with their families, and encourage shared responsibility for earning so that no one gender carries it alone.',
+ Emotions:'**Emotions.** Set up peer-support circles and counselling outreach, and make asking for help ordinary for everyone, including boys and men.',
+ Household:'**Household.** Share a simple chore-roster and caregiving-sharing guide with families, for example through parents\' orientation events, and celebrate men who take on caregiving.'
+};
+function reportBlocks(A,d){
+  var B=[],n1=A.p1.length;
+  B.push({t:'h1',x:'The Unseen Rules: Impact Report'});
+  B.push({t:'sub',x:'IGDTUW Gender Equality Observatory 2026 · Generated '+fmtDate(Date.now())});
+  B.push({t:'p',x:'Institutional approval and faculty coordinator: ____________________ (to be completed by the organisers before this report is circulated).'});
+
+  B.push({t:'h2',x:'1. Background and purpose'});
+  B.push({t:'p',x:'Gender norms rarely arrive as written rules. They arrive as advice, jokes, curfews and expectations about who earns, who cooks, who may cry and who must be home before dark. Because they are unwritten, they are hard to question and easy to mistake for "just how things are".'});
+  B.push({t:'p',x:'The Unseen Rules is a campus-wide, anonymous observatory for students of Indira Gandhi Delhi Technical University for Women. It makes those rules visible, documents which ones students say they see around them, and turns the pattern into practical suggestions for the campus and community. It supports the UN Sustainable Development Goal 5, Gender Equality.'});
+  B.push({t:'p',x:'Gender equality concerns everyone. The instrument therefore covers constraints on women and girls, on men and boys, and on everyone, rather than treating equality as a women\'s issue alone.'});
+
+  B.push({t:'h2',x:'2. Objectives'});
+  B.push({t:'ul',x:['Make everyday, unwritten gender rules visible to the students who live with them.','Document which rules students report seeing, across stereotypes, career, freedom, safety, money, emotions and household life, for women, for men and for everyone.','Show how students read and respond to concrete situations that involve gender bias.','Give students a safe, anonymous way to name the stereotypes they most want to retire.','Produce recommendations that the university and student bodies can act on, and a baseline to repeat in later years.']});
+
+  B.push({t:'h2',x:'3. Methodology'});
+  B.push({t:'ul',x:[
+   '**Design.** A cross-sectional, anonymous web survey for IGDTUW students, in three parts. Full wording is in Appendix A.',
+   '**Part 1, Gender Reality Check.** Fifteen statements across seven themes. Five describe women\'s and girls\' experience, six describe men\'s and boys\', and four describe everyone\'s. Respondents rated how true each is in their own life or surroundings on a four-point scale (not true, slightly true, mostly true, completely true), with a "prefer not to say" option.',
+   '**Part 2, Scenario Challenge.** Five everyday situations, two facing women, two facing men and one shared. For each, respondents chose the underlying bias and the fairest response from four options. One option per question is marked as the organisers\' reference reading, offered as a discussion aid and not a measured standard.',
+   '**Part 3, Your Voice.** One free-text stereotype of up to 280 characters, with a self-chosen theme and a choice of who it mostly affects (women and girls, men and boys, everyone, or not sure). Entries with emails, phone numbers, links or handles are rejected. Organisers may hide entries that name individuals or are abusive.',
+   '**Constraint share.** For a statement that describes a constraint, the percentage answering mostly or completely true. For a statement that describes a freedom, the percentage answering not true or slightly true. Theme and group figures are the plain average of the statements in them.',
+   '**Anonymity.** No name, email, device identifier or demographic detail is collected by the page. A random code kept on the respondent\'s own device identifies a submission only to the page. Participants who are signed in to the hosting platform are authenticated by that platform, which the page itself neither reads nor stores.',
+   '**Sampling.** Open, voluntary and self-selected. There is no duplicate check, so counts are submissions, not unique people.'
+  ]});
+
+  B.push({t:'h2',x:'4. Participation'});
+  B.push({t:'table',head:['Measure','Count'],rows:[
+   ['Reality Check submissions',String(n1)],['Scenario Challenge submissions',String(A.p2.length)],['Stereotypes shared (visible)',String(A.vis.length)],['Stereotypes hidden by moderators',String(A.hidden)],
+   ['Data window',A.t0?fmtDate(A.t0)+(fmtDate(A.t1)!==fmtDate(A.t0)?' to '+fmtDate(A.t1):''):'Not recorded']],txt:true});
+
+  B.push({t:'h2',x:'5. Key findings'});
+  B.push({t:'ul',x:findings(A)});
+  if(n1>0){
+    B.push({t:'p',x:'Results by statement (percentages of those who answered that statement; n is the number who answered).'});
+    B.push({t:'table',head:['Theme','Describes','Statement','n'].concat(SCALE),rows:Q.map(function(q,i){var p=A.perQ[i];return [q.t,WHOQ[q.w],q.x,String(p.n)].concat(p.c.map(function(v){return p.n?pct(v/p.n)+'%':'–'}))}),from:3});
+  }
+  if(A.p2.length>0){
+    B.push({t:'p',x:'Scenario results (share choosing the organisers\' reference option).'});
+    B.push({t:'table',head:['Scenario','n','Reference bias chosen','Reference response chosen'],rows:SC.map(function(s,i){var p=A.perS[i];return [s.title,String(p.n),p.n?pct(p.b[s.br]/p.n)+'%':'–',p.n?pct(p.f[s.rr]/p.n)+'%':'–']})});
+  }
+
+  B.push({t:'h2',x:'6. Anonymous student perspectives'});
+  if(A.vis.length){
+    A.vis.slice().sort(function(a,b){return (b.ts||0)-(a.ts||0)}).slice(0,20).forEach(function(v){B.push({t:'quote',x:v.text,c:CATS[v.cat]+(Number.isInteger(v.who)&&WHO[v.who]?' · '+WHO[v.who]:'')})});
+    if(A.vis.length>20)B.push({t:'p',x:'Showing the 20 most recent of '+A.vis.length+' statements.'});
+  }else B.push({t:'p',x:'No statements have been shared yet.'});
+
+  B.push({t:'h2',x:'7. Takeaways'});
+  B.push({t:'p',x:'What this exercise is designed to leave behind:'});
+  B.push({t:'ul',x:[
+   '**For participants.** Naming a rule is the first step to questioning it. Many rules limit people of every gender, in different ways, and a fair response changes the situation, not only the person in it.',
+   '**For the campus community.** A shared vocabulary and a documented starting point for conversations about gender, safety, careers and wellbeing, for women and for men.',
+   '**For the organisers.** Evidence on where students see the strongest constraints, and a baseline to repeat each semester and compare over time.'
+  ]});
+  if(n1>=10){
+    var th=A.perT.filter(function(x){return x.share!==null}).sort(function(a,b){return b.share-a.share});
+    var tk=[];
+    if(th.length>1)tk.push('**Where constraints were reported most.** Respondents most often reported constraints around '+th[0].t.toLowerCase()+' ('+pct(th[0].share)+'% average) and '+th[1].t.toLowerCase()+' ('+pct(th[1].share)+'%).');
+    if(A.perW[0].share!==null&&A.perW[1].share!==null&&A.perW[2].share!==null)tk.push('**Constraints on women, on men and on everyone.** Average constraint share was '+pct(A.perW[0].share)+'% for statements about women and girls, '+pct(A.perW[1].share)+'% for men and boys, and '+pct(A.perW[2].share)+'% for everyone. The statements differ, so this is a map of where respondents see constraints and not a ranking of who is more affected.');
+    B.push({t:'p',x:'What this collection suggests (descriptive only, to be read with the limitations in section 9):'});
+    B.push({t:'ul',x:tk});
+  }else B.push({t:'p',x:'Data-linked takeaways appear once at least 10 Reality Check submissions are collected.'});
+
+  B.push({t:'h2',x:'8. Recommended actions'});
+  if(n1>=10){
+    var top=A.perT.filter(function(x){return x.share!==null}).sort(function(a,b){return b.share-a.share}).slice(0,2);
+    B.push({t:'p',x:'Suggested first focus, based on the two themes with the highest average constraint share in this collection:'});
+    B.push({t:'ul',x:top.map(function(t){return REC_THEME[t.t]+' (average constraint share '+pct(t.share)+'%)'})});
+  }else B.push({t:'p',x:'Data-linked priorities are shown once at least 10 Reality Check submissions are collected.'});
+  B.push({t:'p',x:'Standing recommendations, grounded in the themes of the instrument rather than in the results above:'});
+  var recs=THEMES.map(function(t){return REC_THEME[t]});
+  recs.push('**Inclusion.** Invite male students and mixed-gender partner institutions into the next round, so that men\'s experiences are reported first-hand and not only observed by others.');
+  recs.push('**Dialogue.** Use the five scenarios as discussion material in classes, hostels and student societies, and share an anonymised summary of this report at a campus event.');
+  recs.push('**Measurement.** Repeat the observatory each semester to compare change over time, and seek institutional ethics review before wider publication.');
+  B.push({t:'ul',x:recs});
+
+  B.push({t:'h2',x:'9. Limitations'});
+  B.push({t:'ul',x:['Self-selected respondents may differ from students who did not take part.','Respondents are students of a women\'s university. Statements about men and boys describe what students observe around them, not men\'s own accounts.','No weighting, confidence intervals or significance tests are applied. Differences between statements, themes or groups should not be read as statistically established.','Statements are short and cannot capture context. Answers describe perception and experience, not verified events.','Anonymity means duplicate or coordinated submissions cannot be ruled out.']});
+
+  B.push({t:'h2',x:'Appendix A. Instrument'});
+  B.push({t:'p',x:'Reality Check statements. Respondents answered: not true, slightly true, mostly true, completely true, or prefer not to say.'});
+  B.push({t:'table',head:['No.','Theme','Describes','Statement'],rows:Q.map(function(q,i){return [String(i+1),q.t,WHOQ[q.w],q.x]}),txt:true});
+  B.push({t:'p',x:'Scenarios. Respondents chose the underlying bias and the fairest response. Reference options are the organisers\' reading.'});
+  B.push({t:'table',head:['No.','Scenario','Reference bias','Reference response'],rows:SC.map(function(s,i){return [String(i+1),s.title,s.bias[s.br],s.resp[s.rr]]}),txt:true});
+  return B;
+}
+function inl(s){return esc(s).replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')}
+function toHtml(B){
+  return B.map(function(b){
+    switch(b.t){
+      case 'h1':return '<h1>'+esc(b.x)+'</h1>';
+      case 'h2':return '<h2>'+esc(b.x)+'</h2>';
+      case 'sub':return '<p class="sub">'+esc(b.x)+'</p>';
+      case 'p':return '<p>'+inl(b.x)+'</p>';
+      case 'ul':return '<ul>'+b.x.map(function(i){return '<li>'+inl(i)+'</li>'}).join('')+'</ul>';
+      case 'quote':return '<blockquote>'+esc(b.x)+'<cite>'+esc(b.c)+'</cite></blockquote>';
+      case 'table':var from=b.txt?99:(b.from||(b.head.length>3?2:1));return '<div class="tablewrap"><table><thead><tr>'+b.head.map(function(h,i){return '<th'+(i>=from?' class="num"':'')+'>'+esc(h)+'</th>'}).join('')+'</tr></thead><tbody>'+b.rows.map(function(r){return '<tr>'+r.map(function(c,i){return '<td'+(i>=from?' class="num"':'')+'>'+esc(c)+'</td>'}).join('')+'</tr>'}).join('')+'</tbody></table></div>';
+    }
+    return '';
+  }).join('');
+}
+function toMd(B){
+  function cell(c){return String(c).replace(/\|/g,'/')}
+  return B.map(function(b){
+    switch(b.t){
+      case 'h1':return '# '+b.x;
+      case 'h2':return '## '+b.x;
+      case 'sub':return '*'+b.x+'*';
+      case 'p':return b.x;
+      case 'ul':return b.x.map(function(i){return '- '+i}).join('\n');
+      case 'quote':return '> '+b.x+'\n> — '+b.c;
+      case 'table':return '| '+b.head.map(cell).join(' | ')+' |\n| '+b.head.map(function(){return '---'}).join(' | ')+' |\n'+b.rows.map(function(r){return '| '+r.map(cell).join(' | ')+' |'}).join('\n');
+    }
+    return '';
+  }).join('\n\n')+'\n';
+}
+function toCsv(A){
+  function c(v){return '"'+String(v).replace(/"/g,'""')+'"'}
+  var rows=[['Theme','Describes','Statement','Direction','n answered','Not true %','Slightly true %','Mostly true %','Completely true %','Preferred not to say','Constraint share %']];
+  Q.forEach(function(q,i){var p=A.perQ[i];rows.push([q.t,WHOQ[q.w],q.x,q.d==='c'?'constraint':'freedom',p.n].concat(p.c.map(function(v){return p.n?pct(v/p.n):''})).concat([p.skip,p.share===null?'':pct(p.share)]))});
+  rows.push([]);rows.push(['Scenario','n','Reference bias chosen %','Reference response chosen %']);
+  SC.forEach(function(s,i){var p=A.perS[i];rows.push([s.title,p.n,p.n?pct(p.b[s.br]/p.n):'',p.n?pct(p.f[s.rr]/p.n):''])});
+  return rows.map(function(r){return r.map(c).join(',')}).join('\n')+'\n';
+}
+var EXP_CSS='body{font:16px/1.6 Georgia,serif;max-width:46rem;margin:2rem auto;padding:0 1rem;color:#2A2527}h1,h2{font-weight:600;line-height:1.15}h2{border-bottom:1px solid #2A2527;padding-bottom:.2rem;margin-top:2rem}.sub{font:600 .8rem sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#5B5256}table{border-collapse:collapse;width:100%;font:.85rem/1.4 sans-serif}th,td{border-bottom:1px solid #D6C7BA;padding:.4rem;text-align:left;vertical-align:top}th{border-bottom:1px solid #2A2527}.num{text-align:right}blockquote{margin:1rem 0;padding-left:1rem;border-left:3px solid #D9A7AE;font-style:italic}cite{display:block;font:.7rem sans-serif;text-transform:uppercase;font-style:normal;color:#5B5256}.tablewrap{overflow-x:auto}';
+function renderReport(){
+  var root=$('#rep'),R={responses:(db?remote.responses:localData().responses),voices:(db?remote.voices:localData().voices)};
+  var A=analyse(R),B=reportBlocks(A,R);
+  var local=!db;
+  root.innerHTML='<div class="wrap wide"><div class="rh"><p class="eyebrow">Impact Report</p><h1 style="margin-top:.5rem">Documenting the initiative</h1></div>'+
+   '<div class="banner '+(local?'info':'real')+'" role="note"><b>'+(local?'This device only.':'Collected data only.')+'</b> '+(local?'The shared dataset is not reachable from this view, so the report below covers only answers entered on this device.':'The report is built from the shared dataset and updates as responses arrive.')+' Demonstration data is never included.</div>'+
+   '<div class="export" id="exp"><button class="btn" data-x="html">Download report (HTML)</button><button class="btn ghost" data-x="md">Download Markdown</button><button class="btn ghost" data-x="csv">Download data table (CSV)</button><button class="btn ghost" data-x="copy">Copy report text</button></div><p class="sync" id="expNote" role="status"></p>'+
+   '<article class="rpt">'+toHtml(B)+'</article>'+
+   '<details class="raw"><summary>Report text, for copying by hand</summary><textarea readonly id="rawTxt" aria-label="Report text">'+esc(toMd(B))+'</textarea></details></div>';
+  $('#exp').onclick=function(e){
+    var b=e.target.closest('[data-x]');if(!b)return;var x=b.getAttribute('data-x'),note=$('#expNote');
+    var md=toMd(B);
+    if(x==='copy'){
+      var done=function(){note.textContent='Report text copied.'};
+      var fallback=function(){var t=$('#rawTxt');$('details.raw').open=true;t.focus();t.select();note.textContent='Copying was blocked here. The text is selected below. Copy it with your keyboard or menu.'};
+      try{navigator.clipboard.writeText(md).then(done,fallback)}catch(err){fallback()}
+      return;
+    }
+    if(!dl){note.textContent='Downloads are not available in this view. Use "Copy report text" instead.';return}
+    var file=x==='html'?{n:'IGDTUW-Unseen-Rules-Impact-Report.html',d:'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>The Unseen Rules: Impact Report</title><style>'+EXP_CSS+'</style></head><body>'+toHtml(B)+'</body></html>'}:x==='md'?{n:'IGDTUW-Unseen-Rules-Impact-Report.md',d:md}:{n:'IGDTUW-Unseen-Rules-Data-Table.csv',d:toCsv(A)};
+    dl.save({filename:file.n,data:file.d}).then(function(){note.textContent='Saved '+file.n+'.'},function(er){note.textContent=(er&&er.code==='declined')?'Download cancelled.':'The file could not be saved from this view. Use "Copy report text" instead.'});
+  };
+}
+
+/* ---------- Home ---------- */
+function renderHome(){
+  var el=$('#liveCount');
+  if(db&&remote.ready){var n=remote.responses.filter(function(r){return r&&Array.isArray(r.q)}).length;el.hidden=false;el.textContent=n+' Reality Check '+(n===1?'submission':'submissions')+' collected so far.'}
+  else el.hidden=true;
+}
+
+/* ---------- Routing ---------- */
+function current(){var h=(location.hash||'').replace('#','');return ROUTES.indexOf(h)>=0?h:'home'}
+function route(){
+  var r=current();
+  ROUTES.forEach(function(x){$('#v-'+x).hidden=x!==r});
+  Array.prototype.forEach.call(document.querySelectorAll('#nav a'),function(a){if(a.getAttribute('data-r')===r)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
+  $('#prog').parentNode.hidden=(r==='dashboard'||r==='impact-report');
+  if(r==='home')renderHome();
+  if(r==='reality-check')renderCheck();
+  if(r==='scenarios')renderScen();
+  if(r==='your-voice')renderVoice();
+  if(r==='dashboard')renderDash();
+  if(r==='impact-report')renderReport();
+  renderProgress();
+  window.scrollTo(0,0);
+}
+var tmr=null;
+function onData(){
+  var r=current();
+  if(r==='home')renderHome();
+  clearTimeout(tmr);tmr=setTimeout(function(){
+    var c=current();
+    if(c==='dashboard'&&!document.activeElement.closest('details'))renderDash();
+    if(c==='impact-report'&&!(document.activeElement&&document.activeElement.id==='rawTxt'))renderReport();
+  },300);
+}
+window.addEventListener('hashchange',route);
+
+/* ---------- Boot ---------- */
+route();
+(function boot(){
+  if(!(window.claude&&window.claude.use))return;
+  window.claude.use('downloads').then(function(x){dl=x}).catch(function(){});
+  window.claude.use('user').then(function(u){userCap=u;if(u&&u.canEdit){return Promise.resolve(u.canEdit()).then(function(v){canEdit=!!v;onData()})}}).catch(function(){});
+  window.claude.use('db').then(function(x){
+    if(!x)return;db=x;
+    var first={r:false,v:false};
+    function ready(){if(first.r&&first.v){remote.ready=true}onData()}
+    db.collection('responses').limit(1000).onSnapshot(function(s){remote.responses=s.docs.map(function(d){return d.data()||{}});first.r=true;ready()},function(){remote.err=true;first.r=true;ready()});
+    db.collection('voices').limit(500).onSnapshot(function(s){remote.voices=s.docs.map(function(d){var o=d.data()||{};o.id=d.id;return o});first.v=true;ready()},function(){remote.err=true;first.v=true;ready()});
+    /* re-send anything finished before the store answered */
+    if((state.p1||state.p2)&&state.sentR!==(state.p1?1:0)+(state.p2?2:0))pushResponse();
+    if(state.voice&&!state.sentV)pushVoice();
+    onData();
+  }).catch(function(){});
+})();
+})();
+</script>
+
+</body></html>
